@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-nlptosql-backend
+  labels:
+    app: ai-nlptosql
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-nlptosql
+  template:
+    metadata:
+      labels:
+        app: ai-nlptosql
+    spec:
+      containers:
+      - name: backend
+        image: ai-nlptosql-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        env:
+        - name: HUGGINGFACEHUB_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-secret
+              key: token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-nlptosql-service
+spec:
+  selector:
+    app: ai-nlptosql
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer

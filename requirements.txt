@@ -1,0 +1,10 @@
+faiss-cpu
+uvicorn
+sqlalchemy
+pydantic
+langchain
+langchain-huggingface
+pytest
+httpx
+sentence-transformers
+langchain-community
